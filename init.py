@@ -1,7 +1,18 @@
+EDGES_LIST = []
+visited = []
+
+
 class Link:
     def __init__(self, origin, destination):
         self.origin = origin
         self.destination = destination
+        self.weight = 0
+
+
+def print_edges():
+    for edge in EDGES_LIST:
+        print('Edge: [' + edge.origin + ',' +
+              edge.destination + ']', 'Weight:', edge.weight)
 
 
 def create_adjacency_list(edges_list):
@@ -10,12 +21,36 @@ def create_adjacency_list(edges_list):
         if edge.origin not in adjacency_list:
             adjacency_list[edge.origin] = []
         adjacency_list[edge.origin].append(edge.destination)
+    return adjacency_list
+
+
+def increment_weight(origin, destination):
+    for edge in EDGES_LIST:
+        if edge.origin == origin and edge.destination == destination:
+            edge.weight += 1
 
 
 def edges(line):
     if(line != ""):
         origin, destination, _ = line.split(" ")
-        return Link(origin, destination)
+        if origin != destination:
+            return Link(origin, destination)
+    return None
+
+
+def dfs_visit(adjacency_list, vertex, visited):
+    visited.append(vertex)
+    for neighbor in adjacency_list[vertex]:
+        if neighbor not in visited:
+            increment_weight(vertex, neighbor)
+            dfs_visit(adjacency_list, neighbor, visited)
+
+
+def dfs(adjacency_list):
+    for vertex in adjacency_list:
+        if vertex not in visited:
+            dfs_visit(adjacency_list, vertex, [])
+    print_edges()
 
 
 def read_file(file_name):
@@ -28,10 +63,14 @@ def read_file(file_name):
                     continue
                 else:
                     if(line != ""):
-                        edges_list.append(edges(line))
+                        if edges(line) is not None:
+                            edges_list.append(edges(line))
+                            EDGES_LIST.append(edges(line))
                     if not line:
                         break
-            create_adjacency_list(edges_list)
+            adjacency_list = create_adjacency_list(edges_list)
+            dfs(adjacency_list)
+
     except FileNotFoundError:
         print("File not found")
 
