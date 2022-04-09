@@ -1,3 +1,5 @@
+import time
+
 EDGES_LIST = []
 visited = []
 
@@ -9,7 +11,15 @@ class Link:
         self.weight = 0
 
 
+def write_file_mtx():
+    for edge in EDGES_LIST:
+        with open("output.mtx", "a") as file:
+            file.write(str(edge.origin) + " " +
+                       str(edge.destination) + " " + str(edge.weight) + "\n")
+
+
 def print_edges():
+    write_file_mtx()
     for edge in EDGES_LIST:
         print('Edge: [' + edge.origin + ',' +
               edge.destination + ']', 'Weight:', edge.weight)
@@ -69,8 +79,12 @@ def read_file(file_name):
                     if not line:
                         break
             adjacency_list = create_adjacency_list(edges_list)
-            dfs(adjacency_list)
 
+            time_start = time.time()
+            dfs(adjacency_list)
+            time_end = time.time()
+            Time = time_end - time_start
+            print("Time:", Time)
     except FileNotFoundError:
         print("File not found")
 
