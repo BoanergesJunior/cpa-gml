@@ -90,7 +90,7 @@ def read_file(file_name):
 
 
 def main():
-    read_file("data/d_ss.mtx")
+    read_file("data/olm500.mtx")
 
 
 main()
